@@ -1,0 +1,4 @@
+get_communications:
+    path: /
+    controller: App\Controller\Communications\GetCommunicationsController
+    methods: GET

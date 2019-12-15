@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+{% block title %}Comunications{% endblock %}
+{% block body %}
+    <h1 style="margin-bottom: 15px">Listado de comunicaciones</h1>
+    {% if errors is defined %}
+        <h4>{{ errors }}</h4>
+    {% else %}
+    <div class="accordion" id="accordionCommunications">
+        {% for contact, communications in contacts %}
+            <div class="card">
+                <div class="card-header" id="{{contact}}">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse{{ contact }}" aria-expanded="true" aria-controls="collapseOne">
+                            {{ contact }}
+                        </button>
+                    </h2>
+                </div>
+
+                <div id="collapse{{ contact }}" class="collapse" aria-labelledby="{{contact}}" data-parent="#accordionCommunications">
+                    <div class="card-body">
+                        {% for communication in communications %}
+                            <p>
+                                {% if communication["type"] is same as('C')%}
+                                    <span>📞 Llamada
+
+                                    </span>
+                                {% elseif communication["type"] is same as ('S')%}
+                                    <span>✉️ SMS</span>
+                                {% endif %}
+                                {% if communication["incoming"] %}
+                                    Entrante de {{ communication["source"] }}
+                                {% else %}
+                                    Saliente a {{ communication["destination"] }}
+                                {% endif %}
+                                {{ '('~communication["name"]~')' }}
+                            </p>
+                            <p>
+                                {{ communication["date"]|date('d/m/Y') }} a las {{ communication["date"]|date('H:i:s') }}
+                                {% if communication["type"] is same as('C') %}
+                                    Duración: {{ communication['duration'] }}
+                                {% endif %}
+                            </p>
+                            {% if loop.last %}{% else %}<hr>{% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+{% endblock %}
